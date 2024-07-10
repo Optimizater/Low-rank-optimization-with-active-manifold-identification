@@ -59,7 +59,8 @@ for i = 1:maxIter
     part = sparse_inp(U', V', row, col);
     objVal_temp = computeobj(data,part,lambda,theta,sigma,regType);
 
-    if(i > 1 && objVal_temp > getMaxOverk(obj(1:i - 1), 0))
+%     if(i > 1 && objVal_temp > getMaxOverk(obj(1:i - 1), 0))
+    if ( i>1 && objVal_temp > max(obj(1:i-1)) )
         part0 = data - part1';
         setSval(spa, part0, length(part0));    
         [Q, pwIter] = powerMethodAccMatComp( U1, V1, U0, V0, spa, bi, V0, 2, 1e-4);
@@ -135,6 +136,7 @@ Time = cumsum(Time);
 output.Time = Time(1:i);
 output.data = para.data;
 
+output.iterTol = i;
 
 
 

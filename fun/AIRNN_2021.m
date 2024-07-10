@@ -36,7 +36,10 @@ para.U0 = U0;
 
 
 %   para.test.data = options.Rel;
-para.Rel = options.Rel;
+if isfield(options, 'Rel')
+    para.Rel = options.Rel;
+end
+
 [Usol,Ssol , Vsol, out] = AIRNN( Xm, lambda, sp, para);
 
 Par.Xsol =  Usol * Ssol * Vsol';

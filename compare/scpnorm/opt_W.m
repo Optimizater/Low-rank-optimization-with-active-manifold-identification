@@ -12,7 +12,8 @@ function W = opt_W(X,Z,mv,opt)
     tau = opt.tau;
     v = (2*lambda*(1-p))^(1.0/(2-p));
     v1 = v + lambda*p*v^(p-1);
-    for i = 1:n
+    mn = min(m,n);
+    for i = 1:mn
         s = sigma(i);
         if s >= v1
             x_ = GST(lambda,p,s);
@@ -28,7 +29,7 @@ function W = opt_W(X,Z,mv,opt)
     end
     
     Delta = zeros(size(Sigma));
-    Delta(1:n,:) = diag(delta);
+    Delta(1:mn , 1:mn) = diag(delta);
     W = Q*Delta*R';
 end
 

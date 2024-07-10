@@ -1,15 +1,14 @@
 %% search lambda for LENA.jpg
 clear;clc;format long
 start = 1;
-
+mfilename('fullpath')
 if start==1
   start=0;
   rng(22);format long
   cwd = fileparts(pwd) ;
-  path_lena = strcat(cwd,'\img_image\lena.png');
-  path_re1 = strcat(cwd,'\img_image\re1.jpg');
-  img_ori = double(imread(path_lena))/255 ;
-  % img_ori = double(imread(path_lena))/255;
+  path_img = strcat(cwd,'\img_image\sist_tower.jpg');
+%   path_img = strcat(cwd,'\img_image\re1.jpg');
+  img_ori = double(imread(path_img))/255 ;
   img_size = size(img_ori);
 
 
@@ -19,7 +18,7 @@ if start==1
   mask = zeros(img_size(1:2));
   for i=1:img_size(2)
     idx = 1:1:img_size(1) ;
-    randidx = randperm(img_size(1),img_size(1)); % 随机[n] 中的 k 个 index
+    randidx = randperm(img_size(1),img_size(1)); % generate k indicators randomly
     mask(randidx(1:ceil(img_size(1)*SR)),i)=1;
   end
   % mask should obtain (1-missrate)*m*n elements from the original image
@@ -45,10 +44,10 @@ if start==1
   sp = 0.5;
 
   %%
-  % iterLambdaEPIR = [1e-5:5e-6:1e-4];
-  % iterLambdaFGSRp = [1e0:1e-2:1.18];
-  iterLambdaEPIR = [6.500000000000001e-05];
-  iterLambdaFGSRp = [1.180000000000000];
+  iterLambdaEPIR = 1e-5 : 5e-6 : 1e-4;
+  iterLambdaFGSRp = 1e0 : 1e-2 : 1.18;
+%   iterLambdaEPIR = [6.500000000000001e-05];
+%   iterLambdaFGSRp = [1.180000000000000];
 
   for LS_idx=1:length(iterLambdaEPIR)
     %% EIRNRI

@@ -1,6 +1,9 @@
 % Modified by Ye Wang 03/2022 E-mail: wangye@shanghaitech.edu.cn
 % -X0 is the sampling matrix
 % -M is the mask matrix
+% -opt is options parameters:
+%   - max_iter: is tricky to choosing a suitable number
+%               Too large max_iter may cause divergence
 % ----
 function Par = MC_SCpADMM(X0, M, sp, lambda, mask, tol, opt)
 
@@ -23,7 +26,8 @@ opt.p = sp; % Scp norm
 opt.omega = mask; % observed set
 opt.D_omega = M; % sampling set
 
-Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(svds(x,rank(x)),sp)^(sp));
+% Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(svds(x,rank(x)),sp)^(sp));
+Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(lansvd(x,rank(x),'L'),sp)^(sp));
 
 opt.omega = mask;
 opt.D_omega = M;
