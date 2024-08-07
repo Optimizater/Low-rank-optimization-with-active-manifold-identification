@@ -1,4 +1,4 @@
-# Low-rank-optimization-with-rank-identification
+# Low-rank-optimization-with-active-manifold-identification
 Numerical implementation for solving the nonconvex Schatten-p norm regularization problem:
 
 $$
