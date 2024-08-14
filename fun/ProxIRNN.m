@@ -1,4 +1,4 @@
-% Written by Ye Wang 03/2022 E-mail: wangye@shanghaitech.edu.cn
+% Written by Ye Wang 03/2022 E-mail: w773664703@gmail.com
 % - M is the observation matrix
 % - lambda - regularization parameter, default = 1/sqrt(max(N,M))
 % - beta - the augmented lagrangian parameter, default = 10*lambda
@@ -10,7 +10,7 @@ if isfield(options,'max_iter')==0,max_iter = 2e3;
 else,max_iter = options.max_iter ;
 end
 
-if isfield(options,'eps')==0,epsre = 1e-5;
+if isfield(options,'eps')==0,epsre = 1e-3;
 else,epsre = options.eps ;
 end
 

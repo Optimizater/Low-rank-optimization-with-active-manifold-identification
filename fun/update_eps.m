@@ -1,6 +1,16 @@
-function weps = update_eps(weps,Rk0,Rk1,rc,nssgv,mu)
+% Written by Ye Wang 03/2022(E-mail: w773664703@gmail.com)
 % adaptively update strategy
+% INPUT ::
+% - weps: the old weight
+% - Rk0: the old rank
+% - Rk1: the new rank
+% - rc: dhe dimension of a squared singular value matrix
+% - nssgv: nonzeros of the new singular value
+% - mu: 0 < mu < 1
 
+% OUTPUT ::
+% - weps: the new weight
+function weps = update_eps(weps,Rk0,Rk1,rc,nssgv,mu)
 % if (Rk1 == rc) || (Rk0 == Rk1)
 %   weps = weps .* mu;
 %   return

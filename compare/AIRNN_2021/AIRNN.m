@@ -5,7 +5,7 @@ output.method = 'AIRNN';
 if(isfield(para, 'maxR'))
     maxR = para.maxR;
 else
-    maxR = min(size(D));
+    maxR = min(size(D)); % 5; % min(size(D));
 end
 
 objstep = 1;

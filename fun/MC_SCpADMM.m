@@ -1,4 +1,4 @@
-% Modified by Ye Wang 03/2022 E-mail: wangye@shanghaitech.edu.cn
+% Modified by Ye Wang 03/2022 E-mail: w773664703@gmail.com
 % -X0 is the sampling matrix
 % -M is the mask matrix
 % -opt is options parameters:

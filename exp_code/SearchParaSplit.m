@@ -55,6 +55,7 @@ end
 
 %% ---------- strictly low rank ----------
 RT = [15,20,25,30,35,40];
+sol_method = ["PIR", "AIR", "EIR", "SCP", "FGSR"];
 % for iter_rt = 1:1
 for iter_rt = 1:length(RT)
   rt = RT(iter_rt);
@@ -84,17 +85,19 @@ for iter_rt = 1:length(RT)
   %   options.KLopt = 1e-5;
   %% ------------------% search lambda -----------------------------
   % search with fixed sp
-  sp = 0.5;
-  scan.deep = 2;
-  scan.skip = [6, 9];
-  scan.linspace = [0, 1]; 
-  scan.linearSearch = [0.5^5, 0.5]; % scan.skip = 2 * log{linearSearch(i)}{linearSearch(i+1)} - 1;
-  scanM_PIR = 2^10;
-  scanM_AIR = 2^10;
-  scanM_EIR = 2^8;
-  scanM_SCP = 2^10;
-  scanM_FGSR = 2^10;
-  if exist('scan','var') && isfield(scan,'lambda') && scan.lambda == 1    
+    sp = 0.5;
+    scan.deep = 2;
+    scan.skip = [6, 9];
+    scan.linspace = [0, 1]; 
+    scan.linearSearch = [0.5^5, 0.5]; % scan.skip = 2 * log{linearSearch(i)}{linearSearch(i+1)} - 1;
+    scanM_PIR = 2^10;
+    scanM_AIR = 2^10;
+    scanM_EIR = 2^8;
+    scanM_SCP = 2^10;
+    scanM_FGSR = 2^10;
+  if exist('scan','var') && isfield(scan,'lambda') && scan.lambda == 1
+    
+
     for iscan = 1 : scan.deep
     Lambda_SCP = scanM_SCP .* scan.linearSearch(iscan).^(scan.linspace(iscan) : 1 : scan.skip(iscan));
     [LAMBDA_SCP, ~] = SearchPara(img_ori(:,:,1), XM(:,:,1), XM(:,:,1), 'SCP', Lambda_SCP, sp, mask, tol, optionsScp);

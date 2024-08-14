@@ -1,16 +1,23 @@
 %% show the rank_r result
 % the cache calculate form 'methodVSImage.m'
 % plot the best one for rank_r
-clear; clc; close all;format long;
+clear; clc; close all;
+format long;
 filename = mfilename('fullpath');
 [path, scriptname, ~] = fileparts(filename);
-cd(path); 
-lena_load = load("..\exp_cache\Tab_sist_gym.mat");
-% lena_load = load("..\exp_cache\ImgRe_best_R1.mat");
+cd(path);
+pic_name = 're4';
+cache_load = load(strcat("..\exp_cache\Tab_", pic_name,"_mask1_2407281437.mat"));
+save_rank_30 = 1;
+imshow_rank_list = 1;
+imshow_special_box = 0;
+imshow_red_box = 0;
+tabshow_blank = 1;
+% cache_load = load("..\exp_cache\ImgRe_best_R1.mat");
 
 %% save the rank-30 result
-if 0
-  img_show = lena_load.Tab_img{4}; % rank 30
+if 1
+  img_show = cache_load.Tab_img{4}; % rank 30
 
   figure(1)
   imshow(img_show.ori_img, 'border','tight','initialmagnification','fit');
@@ -26,17 +33,17 @@ if 0
     imshow(img_show.sol{i}, 'border','tight','initialmagnification','fit');
   end
 
-  fig_name = 'SIST_gym_Rank30';
+  fig_name = [pic_name, '_Rank30'];
   imwrite(img_show.ori_img, ['../imgRe_',fig_name,'_Sol1_ori.png'])
   imwrite(img_show.low_img, ['../imgRe_',fig_name,'_Sol2_low.png'])
   imwrite(img_show.mask_img, ['../imgRe_',fig_name,'_Sol3_mask.png'])
-  imwrite(img_show.sol{2}, ['../imgRe_',fig_name,'_Sol4_PIRNN.png'])
-  imwrite(img_show.sol{3}, ['../imgRe_',fig_name,'_Sol5_AIRNN.png'])
-  imwrite(img_show.sol{4}, ['../imgRe_',fig_name,'_Sol6_EIRNRI.png'])
-  imwrite(img_show.sol{5}, ['../imgRe_',fig_name,'_Sol7_Scp.png'])
+  imwrite(img_show.sol{1}, ['../imgRe_',fig_name,'_Sol4_PIRNN.png'])
+  imwrite(img_show.sol{2}, ['../imgRe_',fig_name,'_Sol5_AIRNN.png'])
+  imwrite(img_show.sol{3}, ['../imgRe_',fig_name,'_Sol6_EIRNRI.png'])
+  imwrite(img_show.sol{4}, ['../imgRe_',fig_name,'_Sol7_Scp.png'])
   imwrite(img_show.sol{5}, ['../imgRe_',fig_name,'_Sol8_FGSR.png'])
 end
-%% select a best one in different rank_list and display 
+%% select a best one in different rank_list and display
 % plot lena_best_lambda_p for different rank_r choose a best rank_r
 format bank
 R_psnrTable = [];
@@ -48,30 +55,33 @@ R_psnrTable = [];
 
 % best_R1 = load('..\exp_cache\ImgRe_best_R1.mat')
 % Tab_img = best_R1.Tab_img;
+if imshow_rank_list
+  Tab_img = cache_load.Tab_img;
+  for irank = 1 : 6 % rank_tb = [15 20 25 30 35 40]
+    img_show = Tab_img{irank};
 
-Tab_img = lena_load.Tab_img;
-for irank = 1 : 6 % rank_tb = [15 20 25 30 35 40]
-  img_show = Tab_img{irank};
+    figure(1)
+    imshow(img_show.ori_img)
 
-  figure(1)
-  imshow(img_show.ori_img)
+    figure(2)
+    imshow(img_show.low_img)
 
-  figure(2)
-  imshow(img_show.mask_img)
+    figure(3)
+    imshow(img_show.mask_img)
 
-  figure(3)
-  imshow(img_show.low_img)
 
-  for i = 1:5
-    tempR = 0;
-    img_sol = img_show.sol{i};
-    for k =1 :3
-      tempR = tempR + rank(img_sol(:,:,k));
+
+    for i = 1:5
+      tempR = 0;
+      img_sol = img_show.sol{i};
+      for k =1 :3
+        tempR = tempR + rank(img_sol(:,:,k));
+      end
+      R_psnrTable(irank,2*i-1:2*i) = [vpa(psnr(img_sol,img_show.ori_img),6), floor(tempR/3)];
+
+      figure(3+i)
+      imshow(img_sol)
     end
-    R_psnrTable(irank,2*i-1:2*i) = [vpa(psnr(img_sol,img_show.ori_img),6), floor(tempR/3)];
-
-    figure(3+i)
-    imshow(img_sol)
   end
 end
 %% save table
@@ -92,7 +102,7 @@ end
 % end
 
 %% with ch1 red
-if 0
+if imshow_special_box
   for i = 1:5
     tempR = 0;
     img_sol = img_show.sol{i};
@@ -115,7 +125,7 @@ if 0
   end
 end
 %% mark a red box
-if 0
+if imshow_red_box
   ch1 = img_sol(:,:,1);
   % ch1 = ones(size(img_sol(:,:,1)));
   bd = 1;
@@ -158,21 +168,22 @@ if 0
 end
 %% calculate the psnr and rank to make table
 % R_psnr_Rank_Table = zeros(6,10);
-R_psnr_Rank_Table = [];
-format bank
-for i = 1:6
-  img_show = Tab_img{i};
-  img_ori = img_show.ori_img;
-  img_low = img_show.low_img;
-  for j = 1:5
-    img_sol = img_show.sol{j};
-%     sPsnr = psnr(img_ori,img_sol)
-    R_psnr_Rank_Table(i,2*j-1) = vpa( psnr(img_ori,img_sol), 2);
-    tempR = 0;
-    for k =1 :3
-      tempR = tempR + rank(img_sol(:,:,k));
+if tabshow_blank
+  R_psnr_Rank_Table = [];
+  format bank
+  for i = 1:6
+    img_show = cache_load.Tab_img{i};
+    img_ori = img_show.ori_img;
+    img_low = img_show.low_img;
+    for j = 1:5
+      img_sol = img_show.sol{j};
+      %     sPsnr = psnr(img_ori,img_sol)
+      R_psnr_Rank_Table(i,2*j-1) = vpa( psnr(img_ori,img_sol), 2);
+      tempR = 0;
+      for k =1 :3
+        tempR = tempR + rank(img_sol(:,:,k));
+      end
+      R_psnr_Rank_Table(i,2*j) = floor(tempR/3);
     end
-    R_psnr_Rank_Table(i,2*j) = floor(tempR/3);
   end
 end
-

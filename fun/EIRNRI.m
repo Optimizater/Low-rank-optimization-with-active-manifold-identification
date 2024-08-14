@@ -1,4 +1,4 @@
-% Written by Ye Wang 03/2022(E-mail: wangye@shanghaitech.edu.cn)
+% Written by Ye Wang 03/2022(E-mail: w773664703@gmail.com)
 % INPUT ::
 % - X0: start point
 % - M: the observation matrix
@@ -51,16 +51,30 @@ end
 if isfield(options,'teps')==0,teps = 1e-16;
 else,teps = options.teps;   % restrict the weighted epsilon for AdaIRNN
 end
+
+% --- objective function ---
+if isfield(options,'objf')==0
+  Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(svds(x,rank(x)),sp)^(sp));
+else  
+  % demo: 
+  % Objf = '@(x)(x-1)'
+  Objf = str2func(options.Objf);
+end
+
+% --- first order derivative ---
+if isfield(options,'Gradf')==0
+  Gradf = @(X)(mask.*(X-M));
+else
+  Gradf = str2func(options.Gradf);
+end
+
+ALF = @(x,y)(norm(mask.*(x-M),'fro')/2 + lambda*norm(svd(x)+y,sp)^(sp));
 %% save objective value for ploting
 spRelDist = []; spf = [];
 sprank = [];
 Ssim = []; Rsim = [];
 [nr,nc] = size(M); rc = min(nr,nc);
 weps = ones(rc,1)*epsre;
-
-Gradf = @(X)(mask.*(X-M));
-Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(svds(x,rank(x)),sp)^(sp));
-ALF = @(x,y)(norm(mask.*(x-M),'fro')/2 + lambda*norm(svd(x)+y,sp)^(sp));
 
 iter = 0; %Par.f = Objf(X0);
 X1 = X0;
@@ -134,7 +148,7 @@ while iter < max_iter
   end
 
   if iter == max_iter
-    fprintf( ['EPIRNN reachs the MAX_ITERATION \n ' ...
+    fprintf( ['EIRNRI reachs the MAX_ITERATION \n ' ...
       'iter:%04d\t rank(X):%d\t Obj(F):%d\n'], ...
       iter, rank(Xc),Objf(Xc) );
     break

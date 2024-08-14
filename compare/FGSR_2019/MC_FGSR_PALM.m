@@ -1,7 +1,8 @@
-function Par=MC_FGSR_PALM(X,M,lambda,options)
+function Par=MC_FGSR_PALM(X,M, sp, lambda,options)
 % rewrited by wnagye
 % X : observed matrix 
 % M : observed item
+% sp: dummy parameters, MC_FGSR_PALM just for sp = 0.5
 
 % This is the FGSR based LRMC (noisy) code in the following paper:
 % Factor Group-Sparse Regularization for Efficient Low-Rank Matrix

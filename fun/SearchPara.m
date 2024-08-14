@@ -1,4 +1,4 @@
-% Written by Ye Wang 03/2022(E-mail: w773661799@gmail.com)
+% Written by Ye Wang 03/2022(E-mail: w773664703@gmail.com)
 % INPUT ::
 %   - rel: the ture image or matrix
 %   - X0: start point
@@ -36,10 +36,14 @@ if length(lambdalist) > 1
     switch Method
       case 'SCP'
         SearchR = MC_SCpADMM(X0, Xm, sp, lambdalist(idx_lambda), mask, tol, options);
-      case 'IR'
+      case 'PIR'
+        SearchR = ProxIRNN(X0, Xm, sp, lambdalist(idx_lambda), mask, tol, options);
+      case 'AIR'
+        SearchR = AIRNN_2021(X0, Xm, sp, lambdalist(idx_lambda), mask, tol, options);
+      case 'EIR'
         SearchR = EIRNRI(X0, Xm, sp, lambdalist(idx_lambda), mask, tol, options);
       case 'FGSR'
-        SearchR = MC_FGSRp_PALM(Xm, mask, sp, lambdalist(idx_lambda), options);
+        SearchR = MC_FGSR_PALM(Xm, mask, sp, lambdalist(idx_lambda), options);
       otherwise
         error('SearchPara does not has such method!')
     end
@@ -68,6 +72,7 @@ if length(lambdalist) > 1
     LAMBDA.opt_loc = [lambdalist(optLambdaIdx-1), lambdalist(optLambdaIdx+1)];
   end
 else
+  %% length(lambdalist) == 1
   LAMBDA.opt_index = 1;
   LAMBDA.opt_para = lambdalist;
   LAMBDA.par_list = lambdalist;

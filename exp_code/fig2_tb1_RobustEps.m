@@ -61,18 +61,19 @@ end
 
 Robust_Rank515.CR = Rank_RC;
 Robust_Rank515.AMse = AMse;
-
+%% plot the table
 % save("..\exp_cache\Rank_Robust.mat","Rank_RC",'-mat')
-% load("..\exp_cache\Rank_Robust.mat","Rank_RC",'-mat')
+clear all;clc;
+load("..\exp_cache\Rank_Robust.mat","Rank_RC",'-mat')
+X = categorical({'EIRNAMI', 'IRNAMI', 'PIRNN'});
+% X = reordercats(X,{'Medium','Extra Large'});
 for irankplt = 1 : 3
   figure(irankplt)
-  X = categorical({'EIRNRI', 'IRNRI', 'PIRNN'});
-  X = reordercats(X,{'Medium','Extra Large'});
-  X_num = [1,2,3];
   bar(X,[Rank_RC.EPIR(irankplt), Rank_RC.AIR(irankplt),...
     Rank_RC.PIR(irankplt,3)])
-  ylabel('# of Correct Rank')
+  ylabel('the number of correct rank')
 end
+
 %%
 
 % % -------------------------------------------------------------------% %
