@@ -34,7 +34,7 @@ else,mu = options.mu;
 end
 
 if isfield(options,'alpha')==0,alpha = 0.7;
-else,alpha = options.alpha; % 外推因子
+else,alpha = options.alpha; % extrapolation factor
 end
 
 if isfield(options,'Rel')==0
@@ -52,20 +52,19 @@ if isfield(options,'teps')==0,teps = 1e-16;
 else,teps = options.teps;   % restrict the weighted epsilon for AdaIRNN
 end
 
-% --- objective function ---
+% ------ objective function, first order derivative ------
 if isfield(options,'objf')==0
   Objf = @(x)(norm(mask.*(x-M),'fro')^2/2 + lambda*norm(svds(x,rank(x)),sp)^(sp));
+  Gradf = @(X)(mask.*(X-M));
 else  
   % demo: 
   % Objf = '@(x)(x-1)'
   Objf = str2func(options.Objf);
-end
-
-% --- first order derivative ---
-if isfield(options,'Gradf')==0
-  Gradf = @(X)(mask.*(X-M));
-else
-  Gradf = str2func(options.Gradf);
+  if isfield(options,'Gradf')==0
+    error('please input the first order derivative')
+  else
+    Gradf = str2func(options.Gradf);
+  end
 end
 
 ALF = @(x,y)(norm(mask.*(x-M),'fro')/2 + lambda*norm(svd(x)+y,sp)^(sp));
