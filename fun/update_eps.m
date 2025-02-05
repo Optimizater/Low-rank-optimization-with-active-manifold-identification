@@ -24,12 +24,19 @@ if Rk0 >= Rk1
   end
   tau_2 = weps(Rk1+1);
   mk0k1 = (tau_1 >= tau_2);
-  mk1k1 = (weps(Rk1+1:Rk0) < mu*tau_1);
-  weps(Rk1+1:Rk0) =  mk0k1 .* weps(Rk1+1:Rk0) + ...
-    (~mk0k1) .* (mk1k1.*weps(Rk1+1:Rk0) + (~mk1k1).*mu*tau_1);
-  tau_3 = weps(Rk0);
-  mk2k1 = (weps(Rk0+1:rc) < tau_3);
-  weps(Rk0+1:rc) = (weps(Rk0+1:rc).*mk2k1) +  (tau_3.*(~mk2k1)) ;
+  if Rk0 == Rk1 
+    mk1k1 = (weps(Rk1+1:end) < mu*tau_1);
+    weps(Rk1+1:end) = mk0k1 .* weps(Rk1+1:end) + ...
+    (~mk0k1) .* (mk1k1.*weps(Rk1+1:end) + (~mk1k1).*mu*tau_1);
+    return
+  else
+    mk1k1 = (weps(Rk1+1:Rk0) < mu*tau_1);
+    weps(Rk1+1:Rk0) =  mk0k1 .* weps(Rk1+1:Rk0) + ...
+      (~mk0k1) .* (mk1k1.*weps(Rk1+1:Rk0) + (~mk1k1).*mu*tau_1);
+    tau_3 = weps(Rk0);
+    mk2k1 = (weps(Rk0+1:rc) < tau_3);
+    weps(Rk0+1:rc) = (weps(Rk0+1:rc).*mk2k1) +  (tau_3.*(~mk2k1)) ;
+  end
 else
   tau_3 = weps(Rk0);
   weps(1:Rk0) = weps(1:Rk0) .* mu;

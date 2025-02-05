@@ -88,7 +88,7 @@ while iter < max_iter
   [U,S,V] = svd(Xc - Gradf(Xc)/beta,'econ');
 
   NewS = diag(S) - lambda*sp*(sigma+weps).^(sp-1)/beta;
-  idx = NewS>zero; Rk1 = sum(idx);
+  idx = NewS>zero; Rk1 = sum(idx); NewS(Rk1+1:end) = 0; 
   Xc = U*spdiags(NewS.*idx,0,rc,rc)*V';
 
   weps = update_eps(weps,Rk0,Rk1,rc,NewS(Rk1),mu);
